@@ -1,0 +1,55 @@
+import React, { Component } from 'react';
+import Recommend from './Recommend';
+import Credits from './Credits';
+import { observer } from 'mobx-react';
+
+@observer
+class DetailInfo extends Component {
+
+    _renderGenre = () => {
+        const genres = this.props && this.props.genre && this.props.genre.map(genre => {
+            return (
+                <Genre genre={genre.name} key={genre.id}/>
+            );
+        })
+        return genres;
+    }
+
+    handleTrailerView = () => {
+        this.props.store._setShowTrailer();
+    }
+
+    render() {
+        const postUrl = 'https://image.tmdb.org/t/p/original'
+
+        return (
+            <>
+                <div className="Poster__Wrap Detail__Poster">
+                    <img src={postUrl + this.props.poster} alt={this.props.title}/>
+                </div>
+                <div className="Text__Info">
+                    <h2>{this.props.title}</h2>
+                    <h3>{this.props.og_title}</h3>
+                    <p>
+                        <span className="Vote__Average"><i className="fas fa-star"/>{this.props.vote_average}</span>
+                        <span className="Running__Time"><i className="far fa-clock"/>{this.props.runtime}분</span>
+                        {this.props.store.isExisTrailer ? <span className="Trailer__View" onClick={this.handleTrailerView}><i className="fab fa-youtube"/>예고편 보기</span> : null}
+                    </p>
+                    <div className="Genre__Wrapp">{this._renderGenre()}</div>
+                    <p className="Tagline">{this.props.tagline}</p>
+                    <p className="Summary">{this.props.summary}</p>
+                </div>
+                <Credits/>
+                <Recommend/>
+            </>
+        );
+    }
+}
+
+function Genre ({genre}) {
+    return (
+        <span className="Movie__Genre">{genre}</span>
+    )
+}
+
+export default DetailInfo;
